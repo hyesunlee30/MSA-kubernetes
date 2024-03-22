@@ -1,0 +1,161 @@
+version: '3.3'
+services:
+  eureka:
+    platform: linux/amd64
+    container_name: eureka-service
+    build:
+      context: ./eureka
+      dockerfile: Dockerfile
+    #image: eureka:0.0.1-SNAPSHOT  # 이미지 이름과 태그를 여기에 명시
+    privileged: true
+    restart: on-failure
+    environment:
+      - MAIL_USERNAME=
+      - MAIL_PASSWORD=
+      - TZ=Asia/Seoul
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8761:8761"
+    networks:
+      - som_network
+  gateway:
+    depends_on:
+      - eureka
+    platform: linux/amd64
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    #image:   # 이미지 이름과 태그를 여기에 명시
+    privileged: true
+    restart: on-failure
+    environment:
+      - TZ=Asia/Seoul
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8000:8000"
+    networks:
+      - som_network
+  jdbc:
+    container_name: som_db
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_DATABASE=som
+      - MYSQL_ROOT_HOST=root
+      - MYSQL_ROOT_PASSWORD=1234
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/data:/var/lib/mysql:rw
+    networks:
+      - som_network
+
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: redis_boot
+    hostname: redis_boot
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
+    networks:
+      - som_network
+  admin:
+    depends_on:
+      - eureka
+      - jdbc
+      - redis
+    platform: linux/amd64
+    container_name: admin
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    #image:   # 이미지 이름과 태그를 여기에 명시
+    restart: on-failure
+    environment:
+      - TZ=Asia/Seoul
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8001:8001"
+    networks:
+      - som_network
+  board:
+    depends_on:
+      - eureka
+      - jdbc
+      - redis
+    platform: linux/amd64
+    container_name: board
+    build:
+      context: ./board
+      dockerfile: Dockerfile
+    #image:   # 이미지 이름과 태그를 여기에 명시
+    restart: on-failure
+    environment:
+      - TZ=Asia/Seoul
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8002:8002"
+    networks:
+      - som_network
+  front:
+    container_name: som-front
+    build:
+      context: ./som-front
+      dockerfile: Dockerfile
+    #image:   # 이미지 이름과 태그를 여기에 명시
+    restart: on-failure
+    environment:
+      - TZ=Asia/Seoul
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    ports:
+      - "3000:3000"
+    networks:
+      - som_network
+
+  batch:
+    depends_on:
+      - eureka
+      - jdbc
+      - redis
+    platform: linux/amd64
+    container_name: batch
+    build:
+      context: ./batch
+      dockerfile: Dockerfile
+    #image:   # 이미지 이름과 태그를 여기에 명시
+    restart: on-failure
+    environment:
+      - TZ=Asia/Seoul
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8003:8003"
+    networks:
+      - som_network
+
+
+networks:
+  som_network:
+    driver: bridge
