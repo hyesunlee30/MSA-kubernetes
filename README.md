@@ -10,7 +10,6 @@
 
 <div align="center">
  
-## &nbsp;📬SOM
 ![image](https://github.com/hyesunlee30/MSA-kubernetes/assets/48422615/73628070-de39-4094-b2db-b96edd7f6063)
 
 
