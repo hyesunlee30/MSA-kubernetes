@@ -10,7 +10,9 @@
 
 <div align="center">
  
-## &nbsp;📬[SOM데모 사이트 바로가기](https://www.naver.com)
+## &nbsp;📬SOM
+![image](https://github.com/hyesunlee30/MSA-kubernetes/assets/48422615/73628070-de39-4094-b2db-b96edd7f6063)
+
 
 </div>
 
