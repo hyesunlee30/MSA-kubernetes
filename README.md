@@ -281,18 +281,5 @@ change 메서드: 이 메서드는 주어진 텍스트에서 대소문자를 무
 
 
 
-##  📝테스트 및 결과
-
-<details>
-<summary>테스트 및 결과보기(click)</summary>
-</details>
-
-![footer](https://capsule-render.vercel.app/api?type=shark&height=200&text=Thank%20you&section=footer&reversal=true&fontColor=FFFFFF&fontAlign=83&fontAlignY=89&fontSize=38)
-
-
-
-   
-
-
 
 
